@@ -375,33 +375,56 @@ window.onscroll = () =>{
 
 //envoi
 document.addEventListener('DOMContentLoaded', function() {
+    // Écouteur d'événement pour soumettre le formulaire
     let form = document.querySelector('#contact form');
-
     form.addEventListener('submit', function(event) {
         event.preventDefault(); // Empêche l'envoi par défaut du formulaire
 
-        // Récupération des valeurs des champs
-        let name = form.querySelector('input[type="text"]').value.trim();
-        let email = form.querySelector('input[type="email"]').value.trim();
-        let phone = form.querySelector('input[type="tel"]').value.trim();
-        let message = form.querySelector('textarea').value.trim();
+        // Récupération des valeurs des champs du formulaire
+        let formData = getFormData(form);
 
-        // Vérification des champs ici si nécessaire
-
-        // Composer le message pour WhatsApp
-        let whatsappMessage = `Nom: ${name}%0AEmail: ${email}%0ATéléphone: ${phone}%0AMessage: ${message}`;
+        // Composer le message pour WhatsApp en échappant les données
+        let whatsappMessage = buildWhatsAppMessage(formData);
 
         // Ouvrir WhatsApp avec le message pré-rempli
-        let whatsappURL = `https://wa.me/+22965563933>?text=${whatsappMessage}`;
-        window.open(whatsappURL, '_blank');
+        openWhatsApp(whatsappMessage);
 
         // Message de succès à l'utilisateur
         alert('Votre message sera envoyé via WhatsApp. Vous recevrez une réponse sous peu.');
 
-        // Vous pouvez aussi rediriger l'utilisateur vers une page de confirmation si nécessaire
-        // window.location.href = 'confirmation.html';
+        // Redirection de l'utilisateur vers une page de confirmation si nécessaire
+        window.location.href = 'index.html';
     });
 });
+
+// Fonction pour récupérer les valeurs du formulaire
+function getFormData(form) {
+    let name = form.querySelector('input[type="text"]').value.trim();
+    let email = form.querySelector('input[type="email"]').value.trim();
+    let phone = form.querySelector('input[type="tel"]').value.trim();
+    let message = form.querySelector('textarea').value.trim();
+
+    return { name, email, phone, message };
+}
+
+// Fonction pour construire le message WhatsApp en échappant les données
+function buildWhatsAppMessage(formData) {
+    let { name, email, phone, message } = formData;
+
+    // Échapper les données avec encodeURIComponent
+    let encodedName = encodeURIComponent(name);
+    let encodedEmail = encodeURIComponent(email);
+    let encodedPhone = encodeURIComponent(phone);
+    let encodedMessage = encodeURIComponent(message);
+
+    return `Nom: ${encodedName}%0AEmail: ${encodedEmail}%0ATéléphone: ${encodedPhone}%0AMessage: ${encodedMessage}`;
+}
+
+// Fonction pour ouvrir WhatsApp dans un nouvel onglet
+function openWhatsApp(whatsappMessage) {
+    let whatsappURL = `https://wa.me/22965563933?text=${whatsappMessage}`;
+    window.open(whatsappURL, '_blank');
+}
 
 
 </script>
